@@ -1,8 +1,6 @@
 package com.ekaryagin.milkcrm.entity.employee;
 
 import com.ekaryagin.milkcrm.entity.Shop;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -10,8 +8,6 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import java.util.Set;
 
-@Getter
-@Setter
 @Entity
 @DiscriminatorValue("SE")
 public class Seller extends User {
@@ -20,6 +16,22 @@ public class Seller extends User {
     private Set<Shop> shops;
 
     private boolean strictRule;
+
+    public Set<Shop> getShops() {
+        return shops;
+    }
+
+    public void setShops(Set<Shop> shops) {
+        this.shops = shops;
+    }
+
+    public boolean isStrictRule() {
+        return strictRule;
+    }
+
+    public void setStrictRule(boolean strictRule) {
+        this.strictRule = strictRule;
+    }
 
     @Override
     public String toString() {

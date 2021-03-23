@@ -1,13 +1,9 @@
 package com.ekaryagin.milkcrm.entity;
 
 import com.ekaryagin.milkcrm.entity.products.Product;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
 @Entity
 @Table(name="demand_line")
 public class DemandLine {
@@ -22,6 +18,37 @@ public class DemandLine {
     @ManyToOne
     private Demand demand;
 
-    double count;
+    private double count;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Demand getDemand() {
+        return demand;
+    }
+
+    public void setDemand(Demand demand) {
+        this.demand = demand;
+    }
+
+    public double getCount() {
+        return count;
+    }
+
+    public void setCount(double count) {
+        this.count = count;
+    }
 }

@@ -1,14 +1,10 @@
 package com.ekaryagin.milkcrm.entity.products;
 
 import com.ekaryagin.milkcrm.entity.employee.Manager;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Getter
-@Setter
 @Entity
 @Table(name="product")
 public class Product {
@@ -53,6 +49,110 @@ public class Product {
         this.mainKvant = mainKvant;
         this.mainAbnormalAmount = mainAbnormalAmount;
         active = false;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public ProductGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(ProductGroup group) {
+        this.group = group;
+    }
+
+    public Manager getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Manager author) {
+        this.author = author;
+    }
+
+    public String getArticle() {
+        return article;
+    }
+
+    public void setArticle(String article) {
+        this.article = article;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getMeasureUnit() {
+        return measureUnit;
+    }
+
+    public void setMeasureUnit(String measureUnit) {
+        this.measureUnit = measureUnit;
+    }
+
+    public double getMainPrice() {
+        return mainPrice;
+    }
+
+    public void setMainPrice(double mainPrice) {
+        this.mainPrice = mainPrice;
+    }
+
+    public double getMainKvant() {
+        return mainKvant;
+    }
+
+    public void setMainKvant(double mainKvant) {
+        this.mainKvant = mainKvant;
+    }
+
+    public double getMainAbnormalAmount() {
+        return mainAbnormalAmount;
+    }
+
+    public void setMainAbnormalAmount(double mainAbnormalAmount) {
+        this.mainAbnormalAmount = mainAbnormalAmount;
+    }
+
+    public Set<Price> getPrice() {
+        return price;
+    }
+
+    public void setPrice(Set<Price> price) {
+        this.price = price;
+    }
+
+    public Set<Kvant> getKvant() {
+        return kvant;
+    }
+
+    public void setKvant(Set<Kvant> kvant) {
+        this.kvant = kvant;
+    }
+
+    public Set<AbnormalAmount> getAbnormalAmount() {
+        return abnormalAmount;
+    }
+
+    public void setAbnormalAmount(Set<AbnormalAmount> abnormalAmount) {
+        this.abnormalAmount = abnormalAmount;
     }
 
     @Override
