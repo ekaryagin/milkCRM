@@ -2,8 +2,12 @@ package com.ekaryagin.milkcrm.entity.employee;
 
 import com.ekaryagin.milkcrm.entity.Region;
 import com.ekaryagin.milkcrm.entity.products.ProductGroup;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -12,13 +16,13 @@ import java.util.Set;
         strategy = InheritanceType.SINGLE_TABLE
 )
 @DiscriminatorColumn(name = "BD_TYPE")
-public abstract class User {
+public abstract class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected long id;
 
-    protected String nic;
+    protected String username;
     protected String fio;
     protected String email;
     protected long phoneNumber;
@@ -36,6 +40,40 @@ public abstract class User {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<ProductGroup> productGroups;
 
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        ArrayList<Role> grantedRole = new ArrayList<>();
+        grantedRole.add(role);
+        return grantedRole;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isActive();
+    }
+
+
     public long getId() {
         return id;
     }
@@ -44,12 +82,8 @@ public abstract class User {
         this.id = id;
     }
 
-    public String getNic() {
-        return nic;
-    }
-
-    public void setNic(String nic) {
-        this.nic = nic;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFio() {

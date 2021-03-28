@@ -39,7 +39,7 @@ public class Seller extends User {
                 "shops=" + shops +
                 ", strictRule=" + strictRule +
                 ", id=" + id +
-                ", nic='" + nic + '\'' +
+                ", nic='" + username + '\'' +
                 ", fio='" + fio + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber=" + phoneNumber +

@@ -7,7 +7,7 @@ import java.util.List;
 public class ManagerDTO {
 
     private long id;
-    private String nic;
+    private String username;
     private String fio;
     private String email;
     private long phoneNumber;
@@ -25,12 +25,12 @@ public class ManagerDTO {
         this.id = id;
     }
 
-    public String getNic() {
-        return nic;
+    public String getUsername() {
+        return username;
     }
 
-    public void setNic(String nic) {
-        this.nic = nic;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFio() {

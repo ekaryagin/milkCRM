@@ -29,19 +29,19 @@ public class AdService {
         if (user.getRole() == Role.ADMIN) {
             ad.addAll(adRepo.findAll());
         } else if (user.getRole() == Role.RETAIL_SELLER){
-            Seller seller = (Seller) userRepo.findByNic(user.getNic());
+            Seller seller = (Seller) userRepo.findByUsername(user.getUsername());
             for (Region region: seller.getRegions()) {
                 ad.addAll(adRepo.findAllByRegionsAndForSellerTrueAndDisplayStartDateLessThanEqualAndDisplayEndDateGreaterThanEqual
                         (region, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
             }
         } else if (user.getRole() == Role.DEALER){
-            Seller seller = (Seller) userRepo.findByNic(user.getNic());
+            Seller seller = (Seller) userRepo.findByUsername(user.getUsername());
             for (Region region: seller.getRegions()) {
                 ad.addAll(adRepo.findAllByRegionsAndForDealerTrueAndDisplayStartDateLessThanEqualAndDisplayEndDateGreaterThanEqual
                         (region, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
             }
         } else if (user.getRole() == Role.MANAGER){
-            Manager manager = (Manager) userRepo.findByNic(user.getNic());
+            Manager manager = (Manager) userRepo.findByUsername(user.getUsername());
             Set<Ad> set = new HashSet<>();
             for (Region region: manager.getRegions()) {
                 set.addAll(adRepo.findAllByRegionsAndDisplayStartDateLessThanEqualAndDisplayEndDateGreaterThanEqual

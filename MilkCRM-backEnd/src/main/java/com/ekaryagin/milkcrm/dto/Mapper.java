@@ -125,7 +125,7 @@ public class Mapper {
         SellerDTO dto = new SellerDTO();
 
         dto.setId(seller.getId());
-        dto.setNic(seller.getNic());
+        dto.setUsername(seller.getUsername());
         dto.setFio(seller.getFio());
         dto.setEmail(seller.getEmail());
         dto.setPhoneNumber(seller.getPhoneNumber());
@@ -157,7 +157,7 @@ public class Mapper {
         Seller seller = new Seller();
 
         seller.setId(sellerDTO.getId());
-        seller.setNic(sellerDTO.getNic());
+        seller.setUsername(sellerDTO.getUsername());
         seller.setFio(sellerDTO.getFio());
         seller.setEmail(sellerDTO.getEmail());
         seller.setPhoneNumber(sellerDTO.getPhoneNumber());
@@ -195,7 +195,7 @@ public class Mapper {
         ManagerDTO dto = new ManagerDTO();
 
         dto.setId(manager.getId());
-        dto.setNic(manager.getNic());
+        dto.setUsername(manager.getUsername());
         dto.setFio(manager.getFio());
         dto.setEmail(manager.getEmail());
         dto.setPhoneNumber(manager.getPhoneNumber());
@@ -203,7 +203,7 @@ public class Mapper {
         dto.setActive(manager.isActive());
         dto.setPassword(manager.getPassword());
         dto.setProductGroups(mapToProductGroupDTOs(manager.getProductGroups()));
-        dto.setRegions(mapToRegionDTOs((List)manager.getRegions()));
+        dto.setRegions(mapToRegionDTOs(manager.getRegions()));
 
         return dto;
     }
@@ -231,7 +231,7 @@ public class Mapper {
     public Manager mapFromManagerDTO(ManagerDTO managerDTO){
         Manager manager = new Manager();
 
-        manager.setNic(managerDTO.getNic());
+        manager.setUsername(managerDTO.getUsername());
         manager.setFio(managerDTO.getFio());
         manager.setEmail(managerDTO.getEmail());
         manager.setPhoneNumber(managerDTO.getPhoneNumber());
@@ -486,7 +486,7 @@ public class Mapper {
         return dto;
     }
 
-    public List<RegionDTO> mapToRegionDTOs(List<Region> regions){
+    public List<RegionDTO> mapToRegionDTOs(Set<Region> regions){
         List<RegionDTO> regionsDTO = new ArrayList<>();
 
         for (Region region: regions) {

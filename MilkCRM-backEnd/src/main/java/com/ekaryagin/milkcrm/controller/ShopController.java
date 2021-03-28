@@ -3,6 +3,9 @@ package com.ekaryagin.milkcrm.controller;
 import com.ekaryagin.milkcrm.dto.Mapper;
 import com.ekaryagin.milkcrm.dto.ShopDTO;
 import com.ekaryagin.milkcrm.entity.Shop;
+import com.ekaryagin.milkcrm.entity.employee.Role;
+import com.ekaryagin.milkcrm.entity.employee.User;
+import com.ekaryagin.milkcrm.security.jwt.JwtTokenProvider;
 import com.ekaryagin.milkcrm.service.ProductGroupService;
 import com.ekaryagin.milkcrm.service.RegionService;
 import com.ekaryagin.milkcrm.service.ShopService;
@@ -11,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +26,28 @@ public class ShopController {
     private final UserService userService;
     private final ProductGroupService productGroupService;
     private final Mapper mapper;
+    private final HttpServletRequest request;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public ShopController(ShopService shopService, RegionService regionService,
-                          UserService userService, ProductGroupService productGroupService, Mapper mapper) {
+    public ShopController(ShopService shopService,
+                          RegionService regionService,
+                          UserService userService,
+                          ProductGroupService productGroupService,
+                          Mapper mapper,
+                          HttpServletRequest request,
+                          JwtTokenProvider jwtTokenProvider) {
         this.shopService = shopService;
         this.regionService = regionService;
         this.userService = userService;
         this.productGroupService = productGroupService;
         this.mapper = mapper;
+        this.request = request;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    private User getAuthorizedUser(){
+        String token = request.getHeader("authorization").substring(7);
+        return userService.getUser(jwtTokenProvider.getUsername(token));
     }
 
     @GetMapping(value = "/shops")
@@ -90,6 +108,11 @@ public class ShopController {
     @PostMapping(value = "/shops")
     public ResponseEntity<String> newShop (@RequestBody ShopDTO body){
 
+        User user = getAuthorizedUser();
+        if (user.getRole() != Role.ADMIN && user.getRole() != Role.MANAGER){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         switch (shopService.addShop(mapper.mapFromShopDTO(body))){
             case (0):
                 return new ResponseEntity<>(HttpStatus.OK);
@@ -111,6 +134,11 @@ public class ShopController {
 
     @PutMapping(value = "/shops")
     public ResponseEntity<String> saveShop (@RequestBody ShopDTO body){
+
+        User user = getAuthorizedUser();
+        if (user.getRole() != Role.ADMIN && user.getRole() != Role.MANAGER){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
         switch (shopService.saveShop(mapper.mapFromShopDTO(body))){
             case (0):
@@ -135,6 +163,12 @@ public class ShopController {
 
     @DeleteMapping(value = "/shops/{id}")
     public ResponseEntity<String> deleteShop (@PathVariable(name = "id") long id){
+
+        User user = getAuthorizedUser();
+        if (user.getRole() != Role.ADMIN && user.getRole() != Role.MANAGER){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         if (shopService.deleteShop(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }

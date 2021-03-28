@@ -37,7 +37,7 @@ public class ShopService {
 
     public List<Shop> getShopsForUser(User user, Region region){
         if (user.getRole() == Role.RETAIL_SELLER || user.getRole() == Role.DEALER) {
-            Seller seller = (Seller) userRepo.findByNic(user.getNic());
+            Seller seller = (Seller) userRepo.findByUsername(user.getUsername());
             return (List<Shop>) seller.getShops();
         } else {
             return shopRepo.findAllByRegion(region);

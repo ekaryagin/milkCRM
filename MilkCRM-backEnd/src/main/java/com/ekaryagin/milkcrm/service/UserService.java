@@ -7,6 +7,7 @@ import com.ekaryagin.milkcrm.entity.employee.Role;
 import com.ekaryagin.milkcrm.entity.employee.Seller;
 import com.ekaryagin.milkcrm.entity.employee.User;
 import com.ekaryagin.milkcrm.repository.UserRepo;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,15 +25,17 @@ public class UserService {
     private final AdService adService;
     private final ProductService productService;
     private final ProductGroupService productGroupService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    public UserService(UserRepo userRepo, ShopService shopService, DemandService demandService, AdService adService, ProductService productService, ProductGroupService productGroupService) {
+    public UserService(UserRepo userRepo, ShopService shopService, DemandService demandService, AdService adService, ProductService productService, ProductGroupService productGroupService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepo = userRepo;
         this.shopService = shopService;
         this.demandService = demandService;
         this.adService = adService;
         this.productService = productService;
         this.productGroupService = productGroupService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public Seller readSeller(long id){
@@ -95,7 +98,7 @@ public class UserService {
 
     public int addUser(User user){
 
-        if (userRepo.findById(user.getId()) != null || userRepo.findByNic(user.getNic()) != null) {
+        if (userRepo.findById(user.getId()) != null || userRepo.findByUsername(user.getUsername()) != null) {
             return 1;
         } else if(user.getPassword().length() < 8){
             return 2;
@@ -107,6 +110,7 @@ public class UserService {
             return 5;
         }
 
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         return 0;
     }
@@ -115,8 +119,8 @@ public class UserService {
 
         if (readSeller(user.getId()) == null){
             return 7;
-        }else if (!userRepo.findById(user.getId()).getNic().equals(user.getNic())
-                && userRepo.findByNic(user.getNic()) != null){
+        }else if (!userRepo.findById(user.getId()).getUsername().equals(user.getUsername())
+                && userRepo.findByUsername(user.getUsername()) != null){
             return 1;
         } else if (!checkUserPassword(user)) {
             return 2;
@@ -202,5 +206,13 @@ public class UserService {
         }
         userRepo.delete(userRepo.findById(id));
         return true;
+    }
+
+    public User getUser(String userName) {
+        if (userRepo.findByUsername(userName).getRole() == Role.ADMIN
+                || userRepo.findByUsername(userName).getRole() == Role.MANAGER){
+            return userRepo.findByUsername(userName);
+        }
+        return userRepo.findByUsername(userName);
     }
 }

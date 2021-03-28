@@ -7,7 +7,7 @@ import java.util.List;
 public class SellerDTO {
 
     private long id;
-    private String nic;
+    private String username;
     private String fio;
     private String email;
     private long phoneNumber;
@@ -26,12 +26,12 @@ public class SellerDTO {
         this.id = id;
     }
 
-    public String getNic() {
-        return nic;
+    public String getUsername() {
+        return username;
     }
 
-    public void setNic(String nic) {
-        this.nic = nic;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFio() {
@@ -110,7 +110,7 @@ public class SellerDTO {
     public String toString() {
         return "SellerDTO{" +
                 "id=" + id +
-                ", nic='" + nic + '\'' +
+                ", username='" + username + '\'' +
                 ", fio='" + fio + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber=" + phoneNumber +
