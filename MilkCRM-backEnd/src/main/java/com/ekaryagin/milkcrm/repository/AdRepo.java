@@ -19,6 +19,8 @@ public interface AdRepo extends JpaRepository<Ad, Long> {
     ArrayList<Ad> findAllByRegionsAndForDealerTrueAndDisplayStartDateLessThanEqualAndDisplayEndDateGreaterThanEqual
             (Region regions, Timestamp displayStartDate, Timestamp  displayEndDate);
 
+    ArrayList<Ad> findAllByRegions (Region regions);
+
     ArrayList<Ad> findAllByAuthor(Manager manager);
 
 }

@@ -7,12 +7,10 @@ import com.ekaryagin.milkcrm.entity.products.Product;
 import com.ekaryagin.milkcrm.entity.products.ProductGroup;
 import com.ekaryagin.milkcrm.repository.ProductRepo;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ProductService {
@@ -26,7 +24,11 @@ public class ProductService {
         this.productGroupService = productGroupService;
     }
 
-    public List<Product> getProduct(User user, ProductGroup productGroup){
+    public Optional<Product> getProduct(long id){
+        return productRepo.findById(id);
+    }
+
+    public List<Product> getProductsForUser(User user, ProductGroup productGroup){
 
         if (user.getRole() != Role.ADMIN) {
             if (!productGroupService.getProductGroupByUser(user).contains(productGroup)){
@@ -42,8 +44,12 @@ public class ProductService {
         return productRepo.findAllByAuthor(manager);
     }
 
-    public boolean addNewProduct (Product product){
-        if (productRepo.findProductByArticle(product.getArticle()) != null){
+    public List<Product> getProductByProductGroup (ProductGroup productGroup){
+        return productRepo.findAllByGroup(productGroup);
+    }
+
+    public boolean addNewProduct (Product product) {
+        if (productRepo.findProductByArticle(product.getArticle()).isPresent()){
             return false;
         }
         try {
@@ -54,11 +60,24 @@ public class ProductService {
         return true;
     }
 
-    public Map<String, Boolean> addNewProductsFromExcel (ProductGroup group, Manager author, String excelFilePath){
+    public boolean saveProduct(Product product){
+        if (productRepo.findProductByArticle(product.getArticle()).isPresent()
+                && productRepo.findProductByArticle(product.getArticle()).get().getId() != product.getId()){
+            return false;
+        }
+        try {
+            productRepo.save(product);
+        } catch (Exception ex) {
+            return false;
+        }
+        return true;
+    }
+
+    public Map<String, Boolean> addNewProductsFromExcel (ProductGroup group, Manager author, MultipartFile excelFile){
         Map<String, Boolean> answer = new HashMap<>();
         ArrayList<Product> products;
         try {
-            products = new ArrayList<>(ExcelParser.getProductsFromExcel(group, author, excelFilePath));
+            products = new ArrayList<>(ExcelParser.getProductsFromExcel(group, author, excelFile));
         } catch (IOException e) {
             answer.put("File not found or damage", true);
             return answer;

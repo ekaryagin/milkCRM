@@ -7,7 +7,7 @@ public class ProductGroupDTOext {
     private long id;
     private String title;
     private String vendor;
-    private List<ManagerDTO> owner;
+    private List<Long> owner;
 
     private int articleColumn;
     private int countColumn;
@@ -17,6 +17,10 @@ public class ProductGroupDTOext {
     private int dateRow;
     private int dateCell;
     private String titleForFile;
+
+    public void addOwner(Long id){
+        owner.add(id);
+    }
 
     public long getId() {
         return id;
@@ -42,11 +46,11 @@ public class ProductGroupDTOext {
         this.vendor = vendor;
     }
 
-    public List<ManagerDTO> getOwner() {
+    public List<Long> getOwner() {
         return owner;
     }
 
-    public void setOwner(List<ManagerDTO> owner) {
+    public void setOwner(List<Long> owner) {
         this.owner = owner;
     }
 

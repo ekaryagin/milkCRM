@@ -6,6 +6,7 @@ import com.ekaryagin.milkcrm.entity.products.ProductGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepo extends JpaRepository<Product, Long> {
 
@@ -13,7 +14,9 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     List<Product> findAllByGroupAndActiveTrue(ProductGroup productGroup);
 
-    Product findProductByArticle(String article);
+    Optional<Product> findProductByArticle(String article);
+
+    Optional<Product> findById(long id);
 
     List<Product> findAllByAuthor (Manager manager);
 

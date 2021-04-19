@@ -24,7 +24,7 @@ public class AdService {
         this.userRepo = userRepo;
     }
 
-    public List<Ad> getAllAd(User user){
+    public List<Ad> getAllAdForUser(User user){
         List<Ad> ad = new ArrayList<>();
         if (user.getRole() == Role.ADMIN) {
             ad.addAll(adRepo.findAll());
@@ -55,6 +55,17 @@ public class AdService {
         return ad;
     }
 
+    public List<Ad> getAllAd(){
+        return adRepo.findAll();
+    }
+
+    public Optional<Ad> getAdById(long id){
+        return adRepo.findById(id);
+    }
+
+    public List<Ad> getAllForRegion(Region region){
+        return adRepo.findAllByRegions(region);
+    }
 
     public List<Ad> getAdsByAuthor(Manager manager){
         return adRepo.findAllByAuthor(manager);
@@ -63,6 +74,15 @@ public class AdService {
     public boolean saveAd (Ad ad){
         try {
             adRepo.save(ad);
+        } catch (Exception ex){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteAd(long id) {
+        try {
+            adRepo.delete(adRepo.getOne(id));
         } catch (Exception ex){
             return false;
         }

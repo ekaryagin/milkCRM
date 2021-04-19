@@ -19,31 +19,22 @@ public class Demand{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
     @ManyToOne
     private Seller author;
-
     @ManyToOne
     private Shop shop;
-
     @ManyToOne
     private Manager approver;
-
     @ManyToOne
     private Region region;
-
     @ManyToOne
     private ProductGroup group;
-
     private Timestamp creationDate;
     private Timestamp processingDate;
-
     @OneToMany(fetch= FetchType.EAGER)
     private Set<DemandLine> listing;
-
     private boolean done;
     private boolean approved;
-
     private boolean attention;
     private String comment;
     private float totalCost;

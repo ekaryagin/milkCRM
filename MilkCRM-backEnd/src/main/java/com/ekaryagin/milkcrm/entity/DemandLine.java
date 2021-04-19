@@ -11,13 +11,10 @@ public class DemandLine {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
     @ManyToOne
     private Product product;
-
     @ManyToOne
     private Demand demand;
-
     private double count;
 
     public long getId() {

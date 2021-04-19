@@ -199,7 +199,7 @@ public class UserService {
         Manager manager = (Manager)userRepo.findById(id);
 
         if (!demandService.getAllDemandByManager(manager).isEmpty()
-                || !adService.getAllAd(manager).isEmpty()
+                || !adService.getAdsByAuthor(manager).isEmpty()
                 || !productService.getProductByAuthor(manager).isEmpty()
                 || !productGroupService.getProductGroupByUser(manager).isEmpty()){
             return false;

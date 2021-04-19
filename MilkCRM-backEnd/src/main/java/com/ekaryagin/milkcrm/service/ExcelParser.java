@@ -10,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,10 +23,10 @@ public class ExcelParser {
     private ExcelParser() {
     }
 
-    public static List<Product> getProductsFromExcel(ProductGroup group, Manager author, String excelFilePath) throws IOException{
+    public static List<Product> getProductsFromExcel(ProductGroup group, Manager author, MultipartFile excelFile) throws IOException{
 
         List<Product> newProducts = new ArrayList<>();
-        XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(excelFilePath));
+        XSSFWorkbook myExcelBook = new XSSFWorkbook(excelFile.getInputStream());
 
         XSSFSheet myExcelSheet = myExcelBook.getSheet("Sheet1");
         Iterator<Row> ri = myExcelSheet.rowIterator();
@@ -33,27 +34,19 @@ public class ExcelParser {
 
         Product nullProduct = new Product (group, author, "article", "Не получено ни одной строки", "шт", 0.0,
                1.0,50.0);
-
         while(ri.hasNext()) {
-
             XSSFRow row = (XSSFRow) ri.next();
-
             if (row.getCell(0) == null || row.getCell(1) == null){
                 if (newProducts.isEmpty()){
                     newProducts.add(nullProduct);
                 }
                 return newProducts;
             }
-
-            Object[] arr = {"артикул", "наименование", "шт", 0.0 /*цена*/, 1.0 /*квант*/, 50.0 /*abnormal*/};
-
+            Object[] arr = {"артикул", "наименование", "шт", 0.0 /*цена*/, 1.0 /*квант*/, 50.0 /*abnormalUnit*/};
             rowParser(arr, row);
-
             newProducts.add(new Product(group, author, arr[0].toString(), arr[1].toString(), arr[2].toString(),
-                                        (double) arr[3], (double) arr[4], (double) arr[5]));
-
+                    (double) arr[3], (double) arr[4], (double) arr[5]));
         }
-
         return newProducts;
     }
 

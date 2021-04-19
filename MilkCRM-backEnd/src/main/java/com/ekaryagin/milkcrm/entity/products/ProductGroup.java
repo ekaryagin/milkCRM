@@ -31,6 +31,10 @@ public class ProductGroup {
 
     private String titleForFile;
 
+    public void addOwner(Manager manager){
+        owner.add(manager);
+    }
+
     public long getId() {
         return id;
     }

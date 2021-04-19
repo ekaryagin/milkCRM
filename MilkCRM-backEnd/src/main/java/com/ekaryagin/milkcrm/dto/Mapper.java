@@ -280,8 +280,7 @@ public class Mapper {
         dto.setId(productGroup.getId());
         dto.setTitle(productGroup.getTitle());
         dto.setVendor(productGroup.getVendor());
-        dto.setOwner(mapToManagerDTOs(productGroup.getOwner()));
-
+        productGroup.getOwner().forEach(owner -> dto.addOwner(owner.getId()));
         dto.setArticleColumn(productGroup.getArticleColumn());
         dto.setCountColumn(productGroup.getCountColumn());
         dto.setSheetName(productGroup.getSheetName());
@@ -341,7 +340,14 @@ public class Mapper {
         group.setId(productGroupDTOext.getId());
         group.setTitle(productGroupDTOext.getTitle());
         group.setVendor(productGroupDTOext.getVendor());
-        group.setOwner((Set)productGroupDTOext.getOwner());
+
+//        for (Long id: productGroupDTOext.getOwner()) {
+//            if (userService.readManager(id) != null && userService.readManager(id).isEnabled()) {
+//                System.out.println(userService.readManager(id).toString());
+//                group.addOwner(userService.readManager(id));
+//            }
+//        }
+        //productGroupDTOext.getOwner().forEach(owner -> group.addOwner(userService.readManager(owner)));
 
         group.setArticleColumn(productGroupDTOext.getArticleColumn());
         group.setCountColumn(productGroupDTOext.getCountColumn());
@@ -370,19 +376,21 @@ public class Mapper {
         dto.setId(product.getId());
         dto.setArticle(product.getArticle());
         dto.setTitle(product.getTitle());
+        dto.setGroup(product.getGroup());
+        dto.setAuthor(product.getAuthor());
         dto.setMeasureUnit(product.getMeasureUnit());
         dto.setMainPrice(product.getMainPrice());
         dto.setMainKvant(product.getMainKvant());
         dto.setMainAbnormalAmount(product.getMainAbnormalAmount());
-        dto.setPrice((List<Price>) product.getPrice());
-        dto.setKvant((List<Kvant>) product.getKvant());
-        dto.setAbnormalAmount((List<AbnormalAmount>) product.getAbnormalAmount());
+        dto.setPrice(new ArrayList<>(product.getPrice()));
+        dto.setKvant(new ArrayList<>(product.getKvant()));
+        dto.setAbnormalAmount(new ArrayList<>(product.getAbnormalAmount()));
 
         return dto;
     }
 
-    public Set<ProductDTOext> mapToProductDTOexts (Set<Product> products) {
-        Set<ProductDTOext> productsDTO = new HashSet<>();
+    public List<ProductDTOext> mapToProductDTOexts (Set<Product> products) {
+        List<ProductDTOext> productsDTO = new ArrayList<>();
 
         for (Product product : products) {
             productsDTO.add(mapToProductDTOext(product));
@@ -416,13 +424,32 @@ public class Mapper {
     }
 
     public List<ProductDTO> mapToProductDTOs (List<Product> products, Region region){
-        List<ProductDTO> adsDTO = new ArrayList<>();
+        List<ProductDTO> productsDTO = new ArrayList<>();
 
         for (Product product: products) {
-            adsDTO.add(mapToProductDTO(product, region));
+            productsDTO.add(mapToProductDTO(product, region));
         }
 
-        return adsDTO;
+        return productsDTO;
+    }
+
+    public Product mapFromProductDTOext (ProductDTOext productDTOext){
+        Product product = new Product();
+
+        product.setActive(productDTOext.isActive());
+        product.setGroup(productDTOext.getGroup());
+        product.setAuthor(productDTOext.getAuthor());
+        product.setArticle(productDTOext.getArticle());
+        product.setTitle(productDTOext.getTitle());
+        product.setMeasureUnit(productDTOext.getMeasureUnit());
+        product.setMainPrice(productDTOext.getMainPrice());
+        product.setMainKvant(productDTOext.getMainKvant());
+        product.setMainAbnormalAmount(productDTOext.getMainAbnormalAmount());
+        product.setPrice(new HashSet<>(productDTOext.getPrice()));
+        product.setKvant(new HashSet<>(productDTOext.getKvant()));
+        product.setAbnormalAmount(new HashSet<>(productDTOext.getAbnormalAmount()));
+
+        return product;
     }
 
 //
@@ -527,7 +554,7 @@ public class Mapper {
         return adsDTO;
     }
 
-    public AdDTOext mapToManagerDTOext (Ad ad){
+    public AdDTOext mapToAdDTOext (Ad ad){
         AdDTOext dto = new AdDTOext();
 
         dto.setId(ad.getId());
@@ -544,13 +571,28 @@ public class Mapper {
         return dto;
     }
 
-    public Set<AdDTOext> mapToManagerDTOexts (Set<Ad> ads){
+    public Set<AdDTOext> mapToAdsDTOexts (Set<Ad> ads){
         Set<AdDTOext> adsDTOext = new HashSet<>();
-
         for (Ad ad: ads) {
-            adsDTOext.add(mapToManagerDTOext(ad));
+            adsDTOext.add(mapToAdDTOext(ad));
         }
-
         return adsDTOext;
+    }
+
+    public Ad mapFromAdDTO (AdDTOext dtoExt){
+        Ad ad = new Ad();
+
+        ad.setId(dtoExt.getId());
+        ad.setAuthor(dtoExt.getAuthor());
+        ad.setTitle(dtoExt.getTitle());
+        ad.setText(dtoExt.getText());
+        ad.setCreationDate(dtoExt.getCreationDate());
+        ad.setDisplayStartDate(dtoExt.getDisplayStartDate());
+        ad.setDisplayEndDate(dtoExt.getDisplayEndDate());
+        ad.setRegions(dtoExt.getRegions());
+        ad.setForSeller(ad.isForSeller());
+        ad.setForDealer(ad.isForDealer());
+
+        return ad;
     }
 }
